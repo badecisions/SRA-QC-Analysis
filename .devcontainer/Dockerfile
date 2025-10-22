@@ -21,4 +21,4 @@ RUN mamba create -n qc_env -c conda-forge -c bioconda -y \
 	trim-galore
 
 # Definindo o comando padrão ao entrar no contêiner
-CMD ["mamba", "run", "-n", "qc_env", "/bin/bash"]
+CMD ["conda", "run", "-n", "qc_env", "/bin/bash"]
