@@ -1,4 +1,4 @@
-# Imagem base - Ubuntu 24.04.3 LTS
+# Imagem base - Ubuntu 24.04 LTS
 FROM ubuntu:24.04
 
 # Evita instaladores interativos
@@ -17,12 +17,13 @@ RUN wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mini
 	rm /tmp/mamba.sh
 ENV PATH="/opt/mambaforge/bin:${PATH}"
 
-# Criando o ambiente mamba com as ferramentas FastQC, MultiQC, Trimgalore e SRA-Tools
+# Criando o ambiente mamba com as ferramentas FastQC, MultiQC, Trimgalore, SRA-Tools e ShellCheck
 RUN mamba create -n qc_env -c conda-forge -c bioconda -y \
 	sra-tools \
 	fastqc \
 	multiqc \
-	trim-galore
+	trim-galore \
+	shellcheck
 
 # Iniciando o mamba para o shell e já abrindo no ambiente
 RUN mamba shell init --shell bash --root-prefix /opt/mambaforge/ && \
