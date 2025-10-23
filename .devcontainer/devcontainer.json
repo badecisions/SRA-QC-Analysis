@@ -1,17 +1,17 @@
 {
-	"name": "E. coli QC Lab",
+	"name": "SRA QC Lab",
 	"build": {
 		// Dá as instruções para usar o Dockerfile
 		"dockerfile": "Dockerfile"
 	},
 	"customizations": {
 		"vscode": {
-			// Definindo o terminal a ser usado dento do VS Code
+			// Definindo o terminal a ser usado dentro do VS Code
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "bash"
 			}
 		}
 	},
-	// Mapeia a pasta do projeto para dento do contêiner
+	// Mapeia a pasta do projeto para dentro do contêiner
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached"
