@@ -14,27 +14,29 @@ DIR_QC="2-qc_reports"
 DIR_TRIM="3-trimmed_data"
 
 # Organizando os arquivos de input e output
-echo "Criando os diretórios"
+echo "[1/6] Criando os diretórios"
 mkdir -p $DIR_RAW $DIR_QC $DIR_TRIM
 
 # Download do SRA
-echo "Fazendo o Download do arquivo $FILE_RAW"
+echo "[2/6] Fazendo o Download do arquivo $FILE_RAW"
 fastq-dump --gzip "$ARQ_SRA" -O $DIR_RAW
 
 # Raw data FastQC
-echo "Gerando o relatório QC do arquivo RAW"
+echo "[3/6] Gerando o relatório QC do arquivo RAW"
 fastqc "$DIR_RAW/$FILE_RAW" -O $DIR_QC
 
 # Trimando os dados
-echo "Limpando os reads de baixa qualidade e removendo adaptadores"
+echo "[4/6] Limpando os reads de baixa qualidade e removendo adaptadores"
 trim_galore "$DIR_RAW/$FILE_RAW" -o $DIR_TRIM
 
 # Trimmed data FastQC
-echo "Gerando relatório do $FILE_TRIMMED"
+echo "[5/6] Gerando relatório do $FILE_TRIMMED"
 fastqc "$DIR_TRIM/$FILE_TRIMMED" -o $DIR_QC
 
 # Unindo os relatórios
-echo "Unindo os dois relatórios"
+echo "[6/6] Unindo os dois relatórios"
 multiqc $DIR_QC -o $DIR_QC
 
-echo "Pipeline finalizado! O relatório está em ${DIR_QC}/multiqc_report.html"
+echo ""
+echo "Pipeline finalizado!" 
+echo "O relatório está em ${DIR_QC}/multiqc_report.html"
