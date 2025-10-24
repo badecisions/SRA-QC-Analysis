@@ -41,7 +41,7 @@ fastqc ${DIR_TRIM}/*fq.gz -o $DIR_QC
 
 # Unindo os relatórios
 echo -e "\n[6/6] Unindo os relatórios"
-multiqc $DIR_QC -o $DIR_QC
+multiqc -s $DIR_QC -o $DIR_QC
 
 echo ""
 echo "Pipeline finalizado!" 
