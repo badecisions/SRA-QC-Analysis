@@ -4,12 +4,18 @@ FROM ubuntu:24.04
 # Evita instaladores interativos
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Dependências básicas
+# Dependências básicas e configurando locale
 RUN apt-get update && apt-get install -y \
 	wget \
 	ca-certificates \
 	git \
-	&& rm -rf /var/lib/apt/lists/*
+	locales \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+	&& locale-gen
+
+# Definindo o locale padrão
+ENV LANG en_US.UTF-8
 
 # Instalando o Mamba no /opt e incluindo no PATH
 RUN wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh" -O /tmp/mamba.sh && \
