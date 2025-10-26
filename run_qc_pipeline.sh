@@ -3,10 +3,8 @@
 # Verificação de argumentos e erros
 set -eu
 
-# Coletando o ID e construindo nomes
-ARQ_SRA=$1
-FILE_RAW="${ARQ_SRA}.fastq.gz"
-FILE_TRIMMED="${ARQ_SRA}_trimmed.fq.gz"
+# Coletando os ID e colocando em um array
+ARQS_SRA=("$@")
 
 # Organizando os caminhos
 DIR_RAW="1-raw_data"
@@ -14,29 +12,37 @@ DIR_QC="2-qc_reports"
 DIR_TRIM="3-trimmed_data"
 
 # Organizando os arquivos de input e output
-echo "[1/6] Criando os diretórios"
+echo "[1/6] Creating directories..."
 mkdir -p $DIR_RAW $DIR_QC $DIR_TRIM
 
-# Download do SRA
-echo "[2/6] Fazendo o Download do arquivo $FILE_RAW"
-fastq-dump --gzip "$ARQ_SRA" -O $DIR_RAW
+# Loop para download dos SRAs
+echo -e "\n[2/6] Downloading SRA files..."
+for ID in "${ARQS_SRA[@]}"
+do
+    echo "Downloading $ID"
+    fastq-dump --gzip "$ID" -O $DIR_RAW
+done
 
 # Raw data FastQC
-echo "[3/6] Gerando o relatório QC do arquivo RAW"
-fastqc "$DIR_RAW/$FILE_RAW" -O $DIR_QC
+echo -e "\n[3/6] Running FastQC on raw files..."
+fastqc ${DIR_RAW}/*.fastq.gz -O $DIR_QC
 
 # Trimando os dados
-echo "[4/6] Limpando os reads de baixa qualidade e removendo adaptadores"
-trim_galore "$DIR_RAW/$FILE_RAW" -o $DIR_TRIM
+echo -e "\n[4/6] Trimming low-quality bases and adapters..."
+for ID in "${ARQS_SRA[@]}"
+do
+    echo -e "\n$ID"
+    trim_galore "${DIR_RAW}/${ID}.fastq.gz" -o $DIR_TRIM
+done
 
 # Trimmed data FastQC
-echo "[5/6] Gerando relatório do $FILE_TRIMMED"
-fastqc "$DIR_TRIM/$FILE_TRIMMED" -o $DIR_QC
+echo -e "\n[5/6] Running FastQC on trimmed files..."
+fastqc ${DIR_TRIM}/*fq.gz -o $DIR_QC
 
 # Unindo os relatórios
-echo "[6/6] Unindo os dois relatórios"
-multiqc $DIR_QC -o $DIR_QC
+echo -e "\n[6/6] Aggregating QC reports with MultiQC..."
+multiqc -s $DIR_QC -o $DIR_QC
 
 echo ""
-echo "Pipeline finalizado!" 
-echo "O relatório está em ${DIR_QC}/multiqc_report.html"
+echo "Pipeline finished successfully!" 
+echo "Final report available at: ${DIR_QC}/multiqc_report.html"
