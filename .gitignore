@@ -1,15 +1,10 @@
-#_______________________
-#.gitignore QC-Analysis 
-#_______________________
+#__________________________
+#.gitignore SRA-QC-Analysis 
+#__________________________
 
-# Ignorando todos os diretórios de dados
-1-raw_data/
-2-qc_reports/
-3-trimmed_data/
-
-# Ignorando logs e afins
 .DS_Store
 *.log
-
-# Ignorando cache do VS Code
 .vscode/
+.__pychache__/
+*.fasta
+*.fastq
