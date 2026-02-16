@@ -1,7 +1,7 @@
 from pathlib import Path
 
 # function to verify the existence of the directories
-def create_directories(output_folder:str):
+def create_directories(output_folder:str, data_folder:str):
     """Cria/verifica todos os diretórios necessários."""
     
     print("DIRETÓRIOS")
@@ -16,7 +16,7 @@ def create_directories(output_folder:str):
     
     logs = Path("logs")
 
-    data_base = Path("data")
+    data_base = Path(data_folder)
     data_raw = data_base / "raw"
     data_processed = data_base / "processed"
     data_refs = data_base / "refs"
