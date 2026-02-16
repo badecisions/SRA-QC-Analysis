@@ -13,6 +13,9 @@ parser.add_argument("--outdir", default="results",
                     help="Diretório onde os resultados serão salvos (Padrão: results/)")
 parser.add_argument("--data", default="data",
                     help="Diretório onde os dados, brutos e processados, serão salvos (Padrão: data/)")
+parser.add_argument("--threads", default=4, type=int,
+                    help="Quantos threads do processador serão utilizadas (Padrão: 4)")
+
 
 args = parser.parse_args()
 
@@ -30,3 +33,5 @@ down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data)
 
 # separando os tipos de arquivos de sequenciamento por layout
 paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=down_sra)
+
+# 
