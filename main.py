@@ -1,5 +1,5 @@
 
-from utils import create_directories, conda_verify, verify_valid_id
+from utils import create_directories, conda_verify, verify_valid_id, check_layout_file
 from modules import sra_downloader
 import sys
 from argparse import ArgumentParser
@@ -27,3 +27,6 @@ sra_user_ids = args.sra
 valid_ids = verify_valid_id(sra_ids=sra_user_ids)
 
 down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data)
+
+# separando os tipos de arquivos de sequenciamento por layout
+paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=down_sra)
