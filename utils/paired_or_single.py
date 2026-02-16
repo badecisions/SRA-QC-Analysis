@@ -11,9 +11,7 @@ def check_layout_file(download_path:str, sra_ids:list) -> list:
     for i in sra_ids:
         temp_fastq = i + "_2.fastq"
 
-        print(temp_fastq)
-
-        caminho_file = download_path / temp_fastq
+        caminho_file = download_path / "raw" / temp_fastq
 
         if caminho_file.exists():
             paired_ids.append(i)
