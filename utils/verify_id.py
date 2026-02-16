@@ -1,9 +1,8 @@
 
-from pathlib import Path
-import re, sys, subprocess
+import re, sys
 
 
-def verify_name_run(sra_ids:list) -> list:
+def verify_valid_id(sra_ids:list) -> list:
     """Verifica se os IDs cedidos pelo usuário são válidos,
     retorna uma lista com os válidos, caso seja vazia, para o programa."""
     padrao = r'^[SED]RR\d+$'
@@ -16,6 +15,7 @@ def verify_name_run(sra_ids:list) -> list:
             valid_sra_ids.append(i)
 
     if len(valid_sra_ids) == 0:
-        sys.exit("Nenhum ID válido")
+        print("Nenhum dos IDs digitados são válidos")
+        sys.exit("ERRO: Nenhum ID válido.")
     else:
         return valid_sra_ids
