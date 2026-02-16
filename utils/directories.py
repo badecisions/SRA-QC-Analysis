@@ -1,9 +1,13 @@
 from pathlib import Path
 
 # function to verify the existence of the directories
-def directories_verify(output_folder:str):
-    """Verifica a presença de todos os diretórios necessários, e caso não existam cria eles."""
-    print("Verificando a integridade das pastas...")
+def create_directories(output_folder:str):
+    """Cria/verifica todos os diretórios necessários."""
+    
+    print("DIRETÓRIOS")
+    
+    print("Criando os diretórios necessários...")
+
     results_base = Path(output_folder)
     results_raw = results_base / "01_fastqc_raw"
     results_report = results_base / "02_fastp_report"
@@ -16,6 +20,12 @@ def directories_verify(output_folder:str):
     data_raw = data_base / "raw"
     data_processed = data_base / "processed"
     data_refs = data_base / "refs"
+
+    print(f'''
+            resultados: {results_base.absolute}
+            logs: {logs.absolute()}
+            data: {data_base.absolute()}
+            ''')
 
     directories = [results_base, results_raw, results_report, 
                    results_clean, results_multi, logs, 
