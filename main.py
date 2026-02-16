@@ -1,6 +1,6 @@
 
 from utils import create_directories, conda_verify, verify_valid_id, check_layout_file
-from modules import sra_downloader
+from modules import sra_downloader, quality_control
 import sys
 from argparse import ArgumentParser
 
@@ -34,4 +34,7 @@ down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data)
 # separando os tipos de arquivos de sequenciamento por layout
 paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=down_sra)
 
-# 
+# rodando o fastqc nos arquivos raw
+print("\nFASTQC RAW FILES")
+quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=True, sra_ids=down_sra)
+
