@@ -22,7 +22,7 @@ def create_directories(output_folder:str, data_folder:str):
     data_refs = data_base / "refs"
 
     print(f'''
-            resultados: {results_base.absolute}
+            resultados: {results_base.absolute()}
             logs: {logs.absolute()}
             data: {data_base.absolute()}
             ''')
