@@ -1,31 +1,33 @@
 
 from pathlib import Path
-import re, sys, subprocess
+import sys, subprocess
+from utils import verify_valid_id
 
 
-def verify_name_run(sra_ids:list) -> list:
-    """Verifica se os IDs cedidos pelo usuário são válidos,
-    retorna uma lista com os válidos, caso seja vazia, para o programa."""
-    padrao = r'^[SED]RR\d+$'
-    valid_sra_ids = []
-
-    for i in sra_ids:
-        if re.match(padrao, i) == None:
-            print(f"O ID {i} é inválido")
-        else:
-            valid_sra_ids.append(i)
-
-    if len(valid_sra_ids) == 0:
-        print("Nenhum dos IDs digitados são válidos")
-        sys.exit("ERRO: Nenhum ID válido.")
-    else:
-        return valid_sra_ids
-
-
-def sra_downloader(sra_ids:list):
-    """Recebe IDs de SRA, verifica se são válidos e utiliza o fasterq-dump
+def sra_downloader(sra_ids:list, download_path:str) -> list:
+    """Recebe IDs, verifica se são válidos e utiliza o fasterq-dump
     para baixar os SRAs."""
+    
+    print("\nBAIXANDO OS ARQUIVOS SRA")
 
-    valid_sra = verify_name_run(sra_ids=sra_ids)
-    dowload_path = Path("data/raw")
-    command_download = ["fasterqdump", ""]
+    valid_sra = verify_valid_id(sra_ids=sra_ids)
+    download = Path(download_path)
+    download = download / "raw"
+
+    for i in range(len(valid_sra)):
+        command_download = ["fasterq-dump", valid_sra[i], "-O", download]
+
+        print(f"Download {i+1}/{len(valid_sra)}: {valid_sra[i]}")
+
+        result = subprocess.run(command_download, capture_output=True)
+
+        if result.returncode != 0:
+            print(f"Não foi possível baixar o SRA ID: {valid_sra[i]}")
+            valid_sra.remove(valid_sra[i])
+
+    if valid_sra == []:
+        sys.exit("ERRO: Nenhum ID pôde ser baixado.")
+    else:
+        print("\nArquivos baixados com sucesso:")
+        print('\n'.join(i for i in valid_sra))
+        return valid_sra
