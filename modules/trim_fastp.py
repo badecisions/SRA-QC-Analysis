@@ -63,5 +63,3 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
                 print(fastp.stderr)
         else:
                 print(f'Fastp concluído para o ID {i}')
-
-trimm_files(data_path='data', results_path='results', sra_ids=["SRR37189381"], paried_end=False, threads=4)
