@@ -24,7 +24,7 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
     threads = str(threads)
 
     for i in sra_ids:
-        print(f"ID {i}")
+        print(f"\nID {i}")
 
         R1_name = (i + "_1" if paried_end else i)
         extension = ".fastq"

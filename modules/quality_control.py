@@ -10,7 +10,7 @@ def quality_control(data_path:str, results_path:str, threads:int, raw:bool, sra_
     threads = str(threads)
 
     for i in sra_ids:
-        print(f"ID {i}")
+        print(f"\nID {i}")
 
         padrao = f"{i}*" + (".fastq" if raw else ".fq.gz")
         arquivos_encontrados = list(path_data.glob(padrao))
