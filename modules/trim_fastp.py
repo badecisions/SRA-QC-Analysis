@@ -32,7 +32,7 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
 
         R1_path_input = path_data_input / (R1_name + extension)
 
-        R1_path_output = path_data_output / (R1_name + ".clean" + extension_output)
+        R1_path_output = path_data_output / (R1_name + "_clean" + extension_output)
 
         html_out = path_output / (i + ".html")
         json_out = path_output / (i + ".json")
@@ -41,7 +41,7 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
             R2_name = i + "_2"
 
             R2_path_input = path_data_input / (R2_name + extension)
-            R2_path_output = path_data_output / (R2_name + ".clean" + extension_output)
+            R2_path_output = path_data_output / (R2_name + "_clean" + extension_output)
 
             command_fastp = ["fastp", 
                         "--in1", R1_path_input, "--out1", R1_path_output,
