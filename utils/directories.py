@@ -19,7 +19,6 @@ def create_directories(output_folder:str, data_folder:str):
     data_base = Path(data_folder)
     data_raw = data_base / "raw"
     data_processed = data_base / "processed"
-    data_refs = data_base / "refs"
 
     print(f'''
             resultados: {results_base.absolute()}
@@ -29,7 +28,7 @@ def create_directories(output_folder:str, data_folder:str):
 
     directories = [results_base, results_raw, results_report, 
                    results_clean, results_multi, logs, 
-                   data_base, data_raw, data_processed, data_refs]
+                   data_base, data_raw, data_processed]
 
     for dir in directories:
         dir.mkdir(exist_ok=True)
