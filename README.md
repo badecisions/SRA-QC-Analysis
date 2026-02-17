@@ -1,7 +1,7 @@
 # SRA-QC-Analysis Pipeline
 
 An automated and modular **Python pipeline** for reproducible Quality Control (QC) and preprocessing of Illumina sequencing data (Single-end & Paired-end), downloaded directly from the Sequence Read Archive (SRA).
-___
+
 ## 1. Features
 
 - **Automated Download:** Fetches raw data using `fasterq-dump` (SRA Toolkit).
@@ -10,7 +10,7 @@ ___
 - **Post-Trim QC:** Generates post-trimming QC reports.
 - **Aggregation:** Compiles a final interactive HTML report using `MultiQC`.
 - **Modular Design:** Easy to maintain and extend Python architecture.
-___
+
 ## 2. Installation
 
 ### Prerequisites
@@ -34,7 +34,7 @@ ___
    conda activate sra_qc
    ```
    *(Note: Ensure your environment file is named `environment.yaml`. If it is named differently, adjust the command above).*
-___
+
 ## 3. Usage
 
 The pipeline is executed via the `main.py` script. You can process multiple SRA IDs in a single run.
@@ -64,7 +64,7 @@ python main.py --sra SRR1153403
 ```bash
 python main.py --sra SRR1153403 SRR1234567 --outdir my_analysis_2026
 ```
-___
+
 ## 4. Output Structure
 
 The pipeline organizes files into a clean directory structure:
@@ -81,12 +81,12 @@ data/
 └── processed/            # Cleaned .fq.gz files (output from fastp)
 ```
 
-___
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-___
+
 ## Contributions & Support
 Contributions and suggestions for new features are welcome, as possibles bug reports.
 
