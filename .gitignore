@@ -2,9 +2,21 @@
 #.gitignore SRA-QC-Analysis 
 #__________________________
 
-.DS_Store
 *.log
 .vscode/
 .__pychache__/
 *.fasta
 *.fastq
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+data/raw/*
+data/processed/*
+data/refs/*
+results/*
+logs/*.log
+*.tmp
+*.temp
