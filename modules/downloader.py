@@ -15,11 +15,14 @@ def sra_downloader(sra_ids:list, download_path:str) -> list:
     download = download / "raw"
 
     for i in range(len(valid_sra)):
-        command_download = ["fasterq-dump", valid_sra[i], "-O", download]
+        command_download = ["fasterq-dump", valid_sra[i], "-O", download, "-x"]
 
         print(f"Download {i+1}/{len(valid_sra)}: {valid_sra[i]}")
 
-        result = subprocess.run(command_download, capture_output=True)
+        log_path = Path("logs") / f"{valid_sra[i]}_fasterq-dump.log"
+
+        with open(log_path, "w") as log_file:
+            result = subprocess.run(command_download, stdout=log_file, stderr=log_file, text=True)
 
         if result.returncode != 0:
             print(f"Não foi possível baixar o SRA ID: {valid_sra[i]}")
