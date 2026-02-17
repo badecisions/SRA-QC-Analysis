@@ -48,5 +48,6 @@ print("\nFASTQC PROCESSED FILES")
 quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=False, sra_ids=down_sra)
 
 # compilando todos os relatórios com o multiqc
+print("\nRUNNINNG MULTIQC")
 run_multiqc(args.outdir)
 print(f"\n\nPipeline FINALIZADO!")
