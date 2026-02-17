@@ -11,17 +11,19 @@ An automated and modular **Python pipeline** for reproducible Quality Control (Q
 - **Aggregation:** Compiles a final interactive HTML report using `MultiQC`.
 - **Modular Design:** Easy to maintain and extend Python architecture.
 
+
 ## 2. Installation
 
 ### Prerequisites
 - **Conda** or **Mamba** (Recommended for faster environment solving).
 - **Git**
 
+
 ### 2.1 Setup
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/badecisions/SRA-QC-Analysis.git](https://github.com/badecisions/SRA-QC-Analysis.git)
+   git clone https://github.com/badecisions/SRA-QC-Analysis.git
    cd SRA-QC-Analysis
    ```
 
@@ -35,6 +37,7 @@ An automated and modular **Python pipeline** for reproducible Quality Control (Q
    ```
    *(Note: Ensure your environment file is named `environment.yaml`. If it is named differently, adjust the command above).*
 
+
 ## 3. Usage
 
 The pipeline is executed via the `main.py` script. You can process multiple SRA IDs in a single run.
@@ -42,6 +45,7 @@ The pipeline is executed via the `main.py` script. You can process multiple SRA 
 ```bash
 python main.py --sra <SRA_ID_1> <SRA_ID_2> ... [OPTIONS]
 ```
+
 
 ### 3.1 Arguments
 
@@ -53,17 +57,21 @@ python main.py --sra <SRA_ID_1> <SRA_ID_2> ... [OPTIONS]
 | `--threads` | Specifies the number of threads used          |    ❌     |     4      |
 | `--data`    | Directory for Raw and Processed data          |    ❌     |  `data/`   |
 
+
 ### 3.2 Examples
+
 
 **3.2.1 Basic Run (Single Sample):**
 ```bash
 python main.py --sra SRR1153403
 ```
 
+
 **3.2.2 Multi-Sample Run (Paired-end supported automatically):**
 ```bash
 python main.py --sra SRR1153403 SRR1234567 --outdir my_analysis_2026
 ```
+
 
 ## 4. Output Structure
 
