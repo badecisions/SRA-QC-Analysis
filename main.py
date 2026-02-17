@@ -1,6 +1,6 @@
 
 from utils import create_directories, conda_verify, verify_valid_id, check_layout_file
-from modules import sra_downloader, quality_control, trimm_files
+from modules import sra_downloader, quality_control, trimm_files, run_multiqc
 import sys
 from argparse import ArgumentParser
 
@@ -46,3 +46,7 @@ trimm_files(data_path=args.data, results_path=args.outdir, sra_ids=single_id, pa
 # rodando o fastqc nos arquivos processed
 print("\nFASTQC PROCESSED FILES")
 quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=False, sra_ids=down_sra)
+
+# compilando todos os relatórios com o multiqc
+run_multiqc(args.outdir)
+print(f"\n\nPipeline FINALIZADO!")
