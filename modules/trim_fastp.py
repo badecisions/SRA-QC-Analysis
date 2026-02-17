@@ -26,22 +26,18 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
     for i in sra_ids:
         print(f"ID {i}")
 
-        single_name = i
+        R1_name = (i + "_1" if paried_end else i)
         extension = ".fastq"
         extension_output = ".fq.gz"
 
-        R1_path_input = path_data_input / (single_name + extension)
+        R1_path_input = path_data_input / (R1_name + extension)
 
-        R1_path_output = path_data_output / (single_name + extension_output)
+        R1_path_output = path_data_output / (R1_name + extension_output)
 
         html_out = path_output / (i + ".html")
         json_out = path_output / (i + ".json")
 
         if paried_end == True:
-            R1_path_input = path_data_input / (single_name + "_1" + extension)
-
-            R1_path_output = path_data_output / (single_name + "_1" + extension_output)
-            
             R2_name = i + "_2"
 
             R2_path_input = path_data_input / (R2_name + extension)
@@ -67,3 +63,5 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
                 print(fastp.stderr)
         else:
                 print(f'Fastp concluído para o ID {i}')
+
+trimm_files(data_path='data', results_path='results', sra_ids=["SRR37189381"], paried_end=False, threads=4)
