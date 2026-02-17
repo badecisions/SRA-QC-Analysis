@@ -1,53 +1,95 @@
+# SRA-QC-Analysis Pipeline
 
-## SRA-QC-Analysis Pipeline
+An automated and modular **Python pipeline** for reproducible Quality Control (QC) and preprocessing of Illumina sequencing data (Single-end & Paired-end), downloaded directly from the Sequence Read Archive (SRA).
+___
+## 1. Features
 
-An automated Bash pipeline for reproducible Quality Control (QC) analysis of single-end Illumina sequencing data downloaded directly from the Sequence Read Archive (SRA).
+- **Automated Download:** Fetches raw data using `fasterq-dump` (SRA Toolkit).
+- **Quality Control:** Generates pre-trimming QC reports using `FastQC`.
+- **Trimming & Filtering:** Cleans reads (adapters, low quality) using `fastp`.
+- **Post-Trim QC:** Generates post-trimming QC reports.
+- **Aggregation:** Compiles a final interactive HTML report using `MultiQC`.
+- **Modular Design:** Easy to maintain and extend Python architecture.
+___
+## 2. Installation
 
-### Installation/Setup
-**Recommended method:** Using the Devcontainer. 
-- Provides a fully configured and reproducible environment with minimal setup.
-- *Requirements:* Docker, VS Code with Dev Containers extension.
+### Prerequisites
+- **Conda** or **Mamba** (Recommended for faster environment solving).
+- **Git**
 
-Clone this repository, open the folder in VS Code, and select "Reopen in Container" when prompted.
+### 2.1 Setup
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/badecisions/SRA-QC-Analysis.git](https://github.com/badecisions/SRA-QC-Analysis.git)
+   cd SRA-QC-Analysis
+   ```
+
+2. Create and activate the environment:
+   ```bash
+   # Create the environment from the provided file
+   conda env create -f environment.yaml
+
+   # Activate it
+   conda activate sra_qc
+   ```
+   *(Note: Ensure your environment file is named `environment.yaml`. If it is named differently, adjust the command above).*
+___
+## 3. Usage
+
+The pipeline is executed via the `main.py` script. You can process multiple SRA IDs in a single run.
+
 ```bash
-git clone https://github.com/badecisions/SRA-QC-Analysis.git
+python main.py --sra <SRA_ID_1> <SRA_ID_2> ... [OPTIONS]
 ```
 
-**Alternative method:** Reconstruct the Conda/Mamba environment.
-- Provides the necessary software but is less reproducible across different systems than the Devcontainer method.
-- *Requirements:* Mamba/Conda.
+### 3.1 Arguments
 
-Clone this repository, navigate into the project directory in your terminal, and create the environment using the provided file: `SRA-QC-Analysis.yaml`
+| Argument    | Description                                   | Required |  Default   |
+| :---------- | :-------------------------------------------- | :------: | :--------: |
+| `--sra`     | List of SRA Accession IDs (e.g., `SRR123456`) |    ✅     |     -      |
+| `--outdir`  | Directory for outputs files                   |    ❌     | `results/` |
+| `--help`    | Show help message                             |    ❌     |     -      |
+| `--threads` | Specifies the number of threads used          |    ❌     |     4      |
+| `--data`    | Directory for Raw and Processed data          |    ❌     |  `data/`   |
+
+### 3.2 Examples
+
+**3.2.1 Basic Run (Single Sample):**
 ```bash
-git clone https://github.com/badecisions/SRA-QC-Analysis.git
-cd SRA-QC-Analysis
-conda env create -f SRA-QC-Analysis.yaml
-conda activate qc_env
+python main.py --sra SRR1153403
 ```
 
-### Usage
-The basic command structure is:
-
+**3.2.2 Multi-Sample Run (Paired-end supported automatically):**
 ```bash
-bash path/to/run_qc_pipeline.sh SRA_ID_1 [SRA_ID_2 SRA_ID_3 ...]
+python main.py --sra SRR1153403 SRR1234567 --outdir my_analysis_2026
+```
+___
+## 4. Output Structure
+
+The pipeline organizes files into a clean directory structure:
+
+```text
+results/
+├── 01_fastqc_raw/        # FastQC reports for raw data
+├── 02_fastp_report/      # Fastp reports
+├── 03_fastqc_clean/      # FastQC reports for trimmed data
+└── 04_multiqc/           # Aggregated MultiQC report (HTML)
+
+data/
+├── raw/                  # Raw .fastq files downloaded from SRA
+└── processed/            # Cleaned .fq.gz files (output from fastp)
 ```
 
-Currently, this pipeline only supports single-end SRA datasets. Support for paired-end files is under development.
+___
+## License
 
-#### Input
-- One or more valid SRA accession IDs corresponding to single-end Illumina sequencing runs
-
-#### Output
-- Three new directories will be created: `1-raw_data`, `2-qc_reports` and `3-trimmed_data
-	- `1-raw_files` - Raw .fastq.gz data from the SRAs
-	- `2-qc_reports` - Contains FastQC reports for both raw and trimmed data, along with a final aggregated MultiQC report (`multiqc_report.html`)
-	- `3-trimmed_data` - Contains the trimmed files in the `fq.gz` format
-
-##### Example
-```bash
-# Download and run QC analysis for two SRA datasets
-bash run_qc_pipeline.sh SRR1153403 SRRXXXXXXX
-```
-
-#### License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+___
+## Contributions & Support
+Contributions and suggestions for new features are welcome, as possibles bug reports.
+
+ To these, please create a new issue, including examples and logs when possible. 
+ 
+ And if you want to PR and add some features, or fixing we're welcome to do this.
