@@ -15,11 +15,15 @@ def quality_control(data_path:str, results_path:str, threads:int, raw:bool, sra_
         padrao = f"{i}*" + (".fastq" if raw else ".fq.gz")
         arquivos_encontrados = list(path_data.glob(padrao))
 
+        log_path = Path("logs") / f"{i}_fastqc.log"
+
         command_fastqc = ["fastqc", "--outdir", path_output, "--threads", threads]
 
         for arq in arquivos_encontrados:
             command_fastqc.append(str(arq))
-            fastqc = subprocess.run(command_fastqc, capture_output=True, text=True)
+
+            with open(log_path, "w") as log_file:
+                fastqc = subprocess.run(command_fastqc, stdout=log_file, stderr=log_file, text=True)
 
             if fastqc.returncode != 0:
                 print(f"ERRO no ID {i}:")

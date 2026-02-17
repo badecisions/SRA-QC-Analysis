@@ -26,6 +26,8 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
     for i in sra_ids:
         print(f"\nID {i}")
 
+        log_path = Path("logs") / f"{i}_fastp.log"
+
         R1_name = (i + "_1" if paried_end else i)
         extension = ".fastq"
         extension_output = ".fq.gz"
@@ -56,7 +58,8 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
                             "-h", html_out,
                             "-j", json_out]
 
-        fastp = subprocess.run(command_fastp, capture_output=True, text=True)
+        with open(log_path, "w") as log_file:
+            fastp = subprocess.run(command_fastp, stdout=log_file, stderr=log_file, text=True)
 
         if fastp.returncode != 0:
                 print(f"ERRO no ID {i}:")
