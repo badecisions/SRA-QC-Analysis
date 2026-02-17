@@ -1,6 +1,6 @@
 
 from utils import create_directories, conda_verify, verify_valid_id, check_layout_file
-from modules import sra_downloader, quality_control
+from modules import sra_downloader, quality_control, trimm_files
 import sys
 from argparse import ArgumentParser
 
@@ -38,3 +38,11 @@ paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=down_s
 print("\nFASTQC RAW FILES")
 quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=True, sra_ids=down_sra)
 
+# passa os .fastqc pelo fastp para limpeza dos dados
+print("\nRUNNING FASTP")
+trimm_files(data_path=args.data, results_path=args.outdir, sra_ids=paired_id, paried_end=True, threads=args.threads)
+trimm_files(data_path=args.data, results_path=args.outdir, sra_ids=single_id, paried_end=False, threads=args.threads)
+
+# rodando o fastqc nos arquivos processed
+print("\nFASTQC PROCESSED FILES")
+quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=False, sra_ids=down_sra)
