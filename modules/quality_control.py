@@ -26,6 +26,3 @@ def quality_control(data_path:str, results_path:str, threads:int, raw:bool, sra_
                 print(fastqc.stderr)
             else:
                 print(f'FastQC concluído para o ID {i}')
-
-
-quality_control("data", "results", 4, True, ["SRR37189381", "SRR37238688"])
