@@ -81,7 +81,7 @@ python main.py --sra SRR1153403 SRR1234567 --outdir my_analysis_2026
 **3.2.3 Reading a list of IDs from a file**
 ```bash
 python main.py --file sra_ids.txt
-``
+```
 
 
 ## 4. Output Structure
