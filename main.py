@@ -1,5 +1,5 @@
 
-from utils import create_directories, conda_verify, verify_valid_id, check_layout_file, save_environment_info, realocate_logfile
+from utils import create_directories, conda_verify, verify_valid_id, check_layout_file, save_environment_info, realocate_logfile, id_or_file
 from modules import sra_downloader, quality_control, trimm_files, run_multiqc
 import logging
 from argparse import ArgumentParser
@@ -8,14 +8,16 @@ from datetime import datetime
 # configurando o parser
 parser = ArgumentParser(description="Pipeline para o Download, Verificação e Limpeza de arquivos SRA.")
 
-parser.add_argument("--sra", required=True,
+parser.add_argument("--sra",
                     help="IDs de acesso do SRA", type=str, nargs="+")
-parser.add_argument("--outdir", default="results",
+parser.add_argument("-o", "--outdir", default="results",
                     help="Diretório onde os resultados serão salvos (Padrão: results/)")
-parser.add_argument("--data", default="data",
+parser.add_argument("-d", "--data", default="data",
                     help="Diretório onde os dados, brutos e processados, serão salvos (Padrão: data/)")
-parser.add_argument("--threads", default=4, type=int,
+parser.add_argument("-t", "--threads", default=4, type=int,
                     help="Quantos threads do processador serão utilizadas (Padrão: 4)")
+parser.add_argument("-f", "--file", type=str,
+                    help="Arquivo .txt contendo uma lista de IDs (um por linha)")
 
 args = parser.parse_args()
 
@@ -43,7 +45,7 @@ conda_verify()
 save_environment_info()
 
 # recebe, verifica e baixa os SRA de acordo com os IDs do user
-sra_user_ids = args.sra
+sra_user_ids = id_or_file(sra_file=args.file, sra_lista=args.sra)
 
 logging.info(f"Validando os IDs")
 valid_ids = verify_valid_id(sra_ids=sra_user_ids)

@@ -46,16 +46,21 @@ The pipeline is executed via the `main.py` script. You can process multiple SRA 
 python main.py --sra <SRA_ID_1> <SRA_ID_2> ... [OPTIONS]
 ```
 
+```bash
+python main.py -f ID_list.txt ... [OPTIONS]
+```
+
 
 ### 3.1 Arguments
 
-| Argument    | Description                                   | Required |  Default   |
-| :---------- | :-------------------------------------------- | :------: | :--------: |
-| `--sra`     | List of SRA Accession IDs (e.g., `SRR123456`) |    ✅     |     -      |
-| `--outdir`  | Directory for outputs files                   |    ❌     | `results/` |
-| `--help`    | Show help message                             |    ❌     |     -      |
-| `--threads` | Specifies the number of threads used          |    ❌     |     4      |
-| `--data`    | Directory for Raw and Processed data          |    ❌     |  `data/`   |
+| Argument    | Description                                     |  Default   |
+| :---------- | :---------------------------------------------- | :--------: |
+| `--sra`     | List of SRA Accession IDs (e.g., `SRR123456`)   |     -      |
+| `--file`    | File .txt with SRA Accession IDs (one per line) |     -      |
+| `--outdir`  | Directory for outputs files                     | `results/` |
+| `--help`    | Show help message                               |     -      |
+| `--threads` | Specifies the number of threads used            |     4      |
+| `--data`    | Directory for Raw and Processed data            |  `data/`   |
 
 
 ### 3.2 Examples
@@ -73,6 +78,12 @@ python main.py --sra SRR1153403 SRR1234567 --outdir my_analysis_2026
 ```
 
 
+**3.2.3 Reading a list of IDs from a file**
+```bash
+python main.py --file sra_ids.txt
+``
+
+
 ## 4. Output Structure
 
 The pipeline organizes files into a clean directory structure:
@@ -87,6 +98,11 @@ results/
 data/
 ├── raw/                  # Raw .fastq files downloaded from SRA
 └── processed/            # Cleaned .fq.gz files (output from fastp)
+
+logs/
+├── run_datatime.log      # Log of the pipeline execution
+├── ID_fasterq-dump.log   # Log from Fasterq-dump (one per ID)
+└── ID_fastp.log          # Log from Fastp (one per ID)
 ```
 
 
