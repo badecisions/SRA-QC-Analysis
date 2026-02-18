@@ -27,7 +27,7 @@ def sra_downloader(sra_ids:list, download_path:str) -> list:
             print(f"Não foi possível baixar o SRA ID: {i}")
             sra_ids.remove(i)
 
-            contador += 1
+        contador += 1
 
     if sra_ids == []:
         sys.exit("ERRO: Nenhum ID pôde ser baixado.")
