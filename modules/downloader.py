@@ -3,7 +3,7 @@ from pathlib import Path
 import sys, subprocess
 
 
-def sra_downloader(sra_ids:list, download_path:str) -> list:
+def sra_downloader(sra_ids:list, download_path:str, num_threads:int) -> list:
     """Recebe IDs, verifica se são válidos e utiliza o fasterq-dump
     para baixar os SRAs."""
     
@@ -12,9 +12,10 @@ def sra_downloader(sra_ids:list, download_path:str) -> list:
     download = Path(download_path)
     download = download / "raw"
     contador = 1
+    threads = str(num_threads)
 
     for i in sra_ids:
-        command_download = ["fasterq-dump", i, "-O", download, "-x"]
+        command_download = ["fasterq-dump", i, "-O", download, "-x", "-e", threads]
 
         print(f"Download {contador}/{len(sra_ids)}: {i}")
 
