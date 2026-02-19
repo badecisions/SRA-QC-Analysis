@@ -51,7 +51,7 @@ logging.info(f"Validando os IDs")
 valid_ids = verify_valid_id(sra_ids=sra_user_ids)
 
 logging.info(f"Iniciando o download dos SRAs validados")
-down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data)
+down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data, num_threads=args.threads)
 
 # separando os tipos de arquivos de sequenciamento por layout
 logging.info(f"Separando os arquivos por layout")
