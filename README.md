@@ -53,14 +53,14 @@ python main.py -f ID_list.txt ... [OPTIONS]
 
 ### 3.1 Arguments
 
-| Argument    | Description                                     |  Default   |
-| :---------- | :---------------------------------------------- | :--------: |
-| `--sra`     | List of SRA Accession IDs (e.g., `SRR123456`)   |     -      |
-| `--file`    | File .txt with SRA Accession IDs (one per line) |     -      |
-| `--outdir`  | Directory for outputs files                     | `results/` |
-| `--help`    | Show help message                               |     -      |
-| `--threads` | Specifies the number of threads used            |     4      |
-| `--data`    | Directory for Raw and Processed data            |  `data/`   |
+| Argument    | Short | Description                                     |  Default   |
+| :---------- | :---- | :---------------------------------------------- | :--------: |
+| `--sra`     |    -  | List of SRA Accession IDs (e.g., `SRR123456`)   |     -      |
+| `--file`    |  `-f` | File .txt with SRA Accession IDs (one per line) |     -      |
+| `--outdir`  |  `-o` | Directory for outputs files                     | `results/` |
+| `--help`    |  `-h` | Show help message                               |     -      |
+| `--threads` |  `-t` | Specifies the number of threads used            |     4      |
+| `--data`    |    -  | Directory for Raw and Processed data            |  `data/`   |
 
 
 ### 3.2 Examples
