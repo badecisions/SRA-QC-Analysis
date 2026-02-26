@@ -1,4 +1,7 @@
 from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
 
 def check_layout_file(download_path:str, sra_ids:list) -> list:
     """Verifica quais arquivos são PAIRED-END e quais são SINGLE-END."""
@@ -17,5 +20,8 @@ def check_layout_file(download_path:str, sra_ids:list) -> list:
             paired_ids.append(i)
         else:
             single_ids.append(i)
+
+    logger.info(f"Paired-end: {" ".join(i for i in paired_ids)}")
+    logger.info(f"Single-end: {" ".join(i for i in single_ids)}")
     
     return paired_ids, single_ids
