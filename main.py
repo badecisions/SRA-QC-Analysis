@@ -1,6 +1,6 @@
 
 from utils import create_directories, conda_verify, verify_valid_id, check_layout_file, save_environment_info, realocate_logfile, id_or_file
-from modules import sra_downloader, quality_control, trimm_files, run_multiqc
+from modules import sra_decompress, prefetch_run, quality_control, trimm_files, run_multiqc
 import logging
 from argparse import ArgumentParser
 from datetime import datetime
@@ -54,16 +54,19 @@ logger.info(f"Validando os IDs")
 valid_ids = verify_valid_id(sra_ids=sra_user_ids)
 
 logger.info(f"Iniciando o download dos SRAs validados")
-down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data, num_threads=args.threads)
+down_sra = prefetch_run(sra_ids=valid_ids, download_path=args.data)
+
+logger.info(f"Iniciando descompressão dos SRAs")
+ready_sra = sra_decompress(sra_ids=down_sra, download_path=args.data, num_threads=args.threads)
 
 # separando os tipos de arquivos de sequenciamento por layout
 logger.info(f"Separando os arquivos por layout")
-paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=down_sra)
+paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=ready_sra)
 
 # rodando o fastqc nos arquivos raw
 print("\nFASTQC RAW FILES")
 logger.info(f"FastQC RAW FILES")
-quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=True, sra_ids=down_sra)
+quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=True, sra_ids=ready_sra)
 
 # passa os .fastqc pelo fastp para limpeza dos dados
 print("\nRUNNING FASTP")
@@ -74,7 +77,7 @@ trimm_files(data_path=args.data, results_path=args.outdir, sra_ids=single_id, pa
 # rodando o fastqc nos arquivos processed
 print("\nFASTQC PROCESSED FILES")
 logger.info(f"FASTQC PROCESSED FILES")
-quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=False, sra_ids=down_sra)
+quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=False, sra_ids=ready_sra)
 
 # compilando todos os relatórios com o multiqc
 print("\nRUNNINNG MULTIQC")
