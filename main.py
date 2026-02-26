@@ -28,54 +28,57 @@ logging.basicConfig(
     filename=log_filename,
     filemode="w",
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-logging.info("Pipeline iniciado.")
-logging.info(f"Argumentos: {args}")
+logger = logging.getLogger(__name__)
+
+logger.info("Pipeline iniciado.")
+logger.info(f"Argumentos: {args}")
 
 
 # criando os diretórios
-logging.info(f"Criando os diretórios")
+logger.info(f"Criando os diretórios")
 create_directories(args.outdir, args.data)
 
 # verificando o conda
-logging.info(f"Verificando a instalação do CONDA")
+logger.info(f"Verificando a instalação do CONDA")
 conda_verify()
 save_environment_info()
 
 # recebe, verifica e baixa os SRA de acordo com os IDs do user
 sra_user_ids = id_or_file(sra_file=args.file, sra_lista=args.sra)
 
-logging.info(f"Validando os IDs")
+logger.info(f"Validando os IDs")
 valid_ids = verify_valid_id(sra_ids=sra_user_ids)
 
-logging.info(f"Iniciando o download dos SRAs validados")
+logger.info(f"Iniciando o download dos SRAs validados")
 down_sra = sra_downloader(sra_ids=valid_ids, download_path=args.data, num_threads=args.threads)
 
 # separando os tipos de arquivos de sequenciamento por layout
-logging.info(f"Separando os arquivos por layout")
+logger.info(f"Separando os arquivos por layout")
 paired_id, single_id = check_layout_file(download_path=args.data, sra_ids=down_sra)
 
 # rodando o fastqc nos arquivos raw
 print("\nFASTQC RAW FILES")
-logging.info(f"FastQC RAW FILES")
+logger.info(f"FastQC RAW FILES")
 quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=True, sra_ids=down_sra)
 
 # passa os .fastqc pelo fastp para limpeza dos dados
 print("\nRUNNING FASTP")
-logging.info(f"Iniciando a limpeza com o Fastp")
+logger.info(f"Iniciando a limpeza com o Fastp")
 trimm_files(data_path=args.data, results_path=args.outdir, sra_ids=paired_id, paried_end=True, threads=args.threads)
 trimm_files(data_path=args.data, results_path=args.outdir, sra_ids=single_id, paried_end=False, threads=args.threads)
 
 # rodando o fastqc nos arquivos processed
 print("\nFASTQC PROCESSED FILES")
-logging.info(f"FASTQC PROCESSED FILES")
+logger.info(f"FASTQC PROCESSED FILES")
 quality_control(data_path=args.data, results_path=args.outdir, threads=args.threads, raw=False, sra_ids=down_sra)
 
 # compilando todos os relatórios com o multiqc
 print("\nRUNNINNG MULTIQC")
-logging.info(f"Compilando os relatórios com o MultiQC")
+logger.info(f"Compilando os relatórios com o MultiQC")
 run_multiqc(args.outdir)
 print(f"\n\nPipeline FINALIZADO!")
 
