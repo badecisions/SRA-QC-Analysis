@@ -1,6 +1,7 @@
 
-import re, sys
+import re, sys, logging
 
+logger = logging.getLogger(__name__)
 
 def verify_valid_id(sra_ids:list) -> list:
     """Verifica se os IDs cedidos pelo usuário são válidos,
@@ -11,11 +12,13 @@ def verify_valid_id(sra_ids:list) -> list:
     for i in sra_ids:
         if re.match(padrao, i) == None:
             print(f"O ID {i} é inválido")
+            logger.error(f"ID inválido: {i}")
         else:
             valid_sra_ids.append(i)
 
     if len(valid_sra_ids) == 0:
         print("Nenhum dos IDs digitados são válidos")
+        logger.error("ERRO: Nenhum ID válido.")
         sys.exit("ERRO: Nenhum ID válido.")
     else:
         return valid_sra_ids
