@@ -1,5 +1,7 @@
-import subprocess
+import subprocess, logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, threads:int):
     """
@@ -25,6 +27,7 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
 
     for i in sra_ids:
         print(f"\nID {i}")
+        logger.info(f"Fastp: Iniciando ID {i}")
 
         log_path = Path("logs") / f"{i}_fastp.log"
 
@@ -58,11 +61,16 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
                             "-h", html_out,
                             "-j", json_out]
 
+        logger.info(f"Comando: {" ".join(map(str, command_fastp))}")
+
         with open(log_path, "w") as log_file:
             fastp = subprocess.run(command_fastp, stdout=log_file, stderr=log_file, text=True)
 
         if fastp.returncode != 0:
                 print(f"ERRO no ID {i}:")
+                logger.error(f"ERRO no ID {i}")
+                logger.error(fastp.stderr)
                 print(fastp.stderr)
         else:
                 print(f'Fastp concluído para o ID {i}')
+                logger.info(f"Fastp: Concluido com sucesso ID {i}")

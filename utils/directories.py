@@ -1,4 +1,7 @@
 from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
 
 # function to verify the existence of the directories
 def create_directories(output_folder:str, data_folder:str):
@@ -31,6 +34,10 @@ def create_directories(output_folder:str, data_folder:str):
                    data_base, data_raw, data_processed]
 
     for dir in directories:
-        dir.mkdir(exist_ok=True)
+        try:
+            dir.mkdir(exist_ok=True)
+            logger.info(f'Criando {dir}')
+        except Exception as e:
+                logger.error(f"Um erro impediu a execução: {e}")
 
     print("Estrutura de diretórios completa!\n")

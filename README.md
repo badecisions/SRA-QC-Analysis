@@ -4,7 +4,7 @@ An automated and modular **Python pipeline** for reproducible Quality Control (Q
 
 ## 1. Features
 
-- **Automated Download:** Fetches raw data using `fasterq-dump` (SRA Toolkit).
+- **Automated Download:** Fetches raw data using `prefetch` and decompress with `fasterq-dump` (SRA Toolkit).
 - **Quality Control:** Generates pre-trimming QC reports using `FastQC`.
 - **Trimming & Filtering:** Cleans reads (adapters, low quality) using `fastp`.
 - **Post-Trim QC:** Generates post-trimming QC reports.
@@ -60,7 +60,7 @@ python main.py -f ID_list.txt ... [OPTIONS]
 | `--outdir`  |  `-o` | Directory for outputs files                     | `results/` |
 | `--help`    |  `-h` | Show help message                               |     -      |
 | `--threads` |  `-t` | Specifies the number of threads used            |     4      |
-| `--data`    |    -  | Directory for Raw and Processed data            |  `data/`   |
+| `--data`    |  `-d` | Directory for Raw and Processed data            |  `data/`   |
 
 
 ### 3.2 Examples
