@@ -5,55 +5,67 @@ import sys, subprocess, logging
 # config info log
 logger = logging.getLogger(__name__)
 
+def _run_command(command:list, id_name:str|Path, tool_name):
+    """Executa o comando no subprocesso"""
+
+    run_cmd = command + [str(id_name)]
+
+    logger.info(f"{tool_name}: Baixando o ID {id_name}")
+    logger.info(f"Comando utilizado: {' '.join(map(str, run_cmd))}")
+
+
+    temp_name = str(id_name)
+
+    if '.sra' in temp_name:
+        corrigido_id = Path(id_name).parent.name
+    else:
+        corrigido_id = id_name
+    
+    log_path = Path("logs") / f"{corrigido_id}_{tool_name}.log"
+
+
+    with open(log_path, "w") as log_file:
+            try:
+                result = subprocess.run(run_cmd, stdout=log_file, stderr=log_file, text=True, check=False)
+
+                if result.returncode != 0:
+                    logger.error(f"{tool_name} falhou para {corrigido_id}")
+                    logger.error(f"Código: {result.returncode}")
+                else:
+                    logger.info(f"{tool_name}: {corrigido_id} concluído")
+                    return corrigido_id
+                
+            except FileNotFoundError:
+                logger.error(f'{tool_name}: Não encontrado no PATH.')
+                sys.exit(1)
+
+
 def prefetch_run(sra_ids:list, download_path:str) -> list:
     """Coordena a execução do Prefetch para o download de arquivos .sra"""
 
     download = Path(download_path) / "raw"
-    contador = 1
+    sucesso_ids = []
+
+    command_prefetch = ["prefetch", "-O", download, "-v"]
 
     print("\nPrefetch: Iniciando os Downloads")
 
     for i in sra_ids:
-        command_prefetch = ["prefetch", i, "-O", download, "-v"]
+        result = _run_command(command=command_prefetch, id_name=i, tool_name="Prefetch")
 
-        logger.info(f"Prefetch: Baixando o ID {i}")
-        logger.info(f"Comando utilizado: {' '.join(map(str, command_prefetch))}")
+        if result is not None:
+            sucesso_ids.append(result)
 
-        print(f"Download {contador}/{len(sra_ids)}: {i}")
-
-        log_path = Path("logs") / f"{i}_prefetch.log"
-
-        with open(log_path, "w") as log_file:
-            try:
-                result_prefetch = subprocess.run(command_prefetch, stdout=log_file, stderr=log_file, text=True, check=True)
-            except FileNotFoundError:
-                logger.error(f'Prefetch não encontrado.')
-            except subprocess.CalledProcessError as e:
-                logger.error(f"O Prefetch falhou ao processar {i}.")
-                logger.error(f"Mensagem do terminal (stderr): {e.stderr}")
-            except Exception as e:
-                logger.exception(f"Um erro impediu a execução: {e}")
-
-
-        if result_prefetch.returncode != 0:
-            print(f"Não foi possível baixar o SRA ID: {i}")
-            sra_ids.remove(i)
-            logger.error(f"Não foi possível realizar o download do ID {i}")
-        else:
-            logger.info(f"Prefetch: Download {i} concluído")
-
-        contador += 1
-
-    if sra_ids == []:
-        sys.exit("ERRO: Nenhum ID pôde ser baixado.")
+    if not sucesso_ids:
         logger.error(f"Nenhum ID pôde ser baixado.")
+        sys.exit("ERRO: Nenhum ID pôde ser baixado.")
     else:
         print("\nArquivos baixados com sucesso:")
-        print('\n'.join(i for i in sra_ids))
+        print('\n'.join(i for i in sucesso_ids))
         logger.info("Downloads concluidos utilizando o Prefetch.")
-        logger.info(' '.join(i for i in sra_ids))
+        logger.info(' '.join(i for i in sucesso_ids))
 
-    return sra_ids
+    return sucesso_ids
 
 def sra_decompress(sra_ids:list, download_path:str, num_threads:int) -> list:
     """Recebe IDs e descomprime arquivos .sra, deixando-os em formato .fastq"""
@@ -61,48 +73,25 @@ def sra_decompress(sra_ids:list, download_path:str, num_threads:int) -> list:
     print("\nFasterq-dump: Descomprimindo arquivos .sra")
 
     data_path = Path(download_path) / "raw"
-    contador = 1
     threads = str(num_threads)
+    sucesso_ids = []
 
+    command_dump = ["fasterq-dump", "-O", data_path, "-x", "-e", threads]
+    
     for i in sra_ids:
         sra_path = data_path / i / (i + ".sra")
 
-        command_dump = ["fasterq-dump", sra_path, "-O", data_path, "-x", "-e", threads]
+        result = _run_command(command=command_dump, id_name=sra_path, tool_name="Fasterq-dump")
 
-        logger.info(f"Fasterq-dump: Descomprimindo o ID {i}.sra")
-        logger.info(f"Comando utilizado: {' '.join(map(str, command_dump))}")
+        if result is not None:
+            sucesso_ids.append(result)
 
-        print(f"Descomprimindo {contador}/{len(sra_ids)}: {i}")
-
-        log_path = Path("logs") / f"{i}_fasterq-dump.log"
-
-        with open(log_path, "w") as log_file:
-            try:
-                result = subprocess.run(command_dump, stdout=log_file, stderr=log_file, text=True, check=True)
-            except FileNotFoundError:
-                logger.error(f'Fasterq-dump não encontrado.')
-            except subprocess.CalledProcessError as e:
-                logger.error(f"O Fasterq-dump falhou ao processar {i}.")
-                logger.error(f"Mensagem do terminal (stderr): {e.stderr}")
-            except Exception as e:
-                logger.exception(f"Um erro impediu a execução: {e}")
-
-
-        if result.returncode != 0:
-            print(f"Não foi possível descomprimir o SRA ID: {i}")
-            sra_ids.remove(i)
-            logger.error(f"Não foi possível descomprimir do ID {i}")
-        else:
-            logger.info(f"Fasterq-dump: Descompressão {i} concluída")
-
-        contador += 1
-
-    if sra_ids == []:
-        sys.exit("ERRO: Nenhum ID pôde ser descomprimido.")
+    if not sucesso_ids:
         logger.error(f"Nenhum ID pôde ser descomprimido.")
+        sys.exit("ERRO: Nenhum ID pôde ser descomprimido.")
     else:
         print("\nArquivos descomprimidos com sucesso:")
-        print('\n'.join(i for i in sra_ids))
+        print('\n'.join(i for i in sucesso_ids))
         logger.info("Descompressão concluida utilizando o Fasterq-dump.")
-        logger.info(' '.join(i for i in sra_ids))
-        return sra_ids
+        logger.info(' '.join(i for i in sucesso_ids))
+        return sucesso_ids
