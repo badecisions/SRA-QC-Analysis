@@ -3,7 +3,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, threads:int):
+def trimm_files(data_path:str, results_path:str, sra_ids:list, paired_end:bool, threads:int):
     """
     Realiza a limpeza de reads com o fastp.
     
@@ -11,10 +11,10 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
     :type data_path: str
     :param results_path: caminho do diretório de resultados
     :type results_path: str
-    :param sra_ids: lista de ids dos arquivos sra
+    :param sra_ids: IDs que foram descomprimidos com sucesso pelo sra_decompress
     :type sra_ids: list
-    :param paried_end: argumento que mostra se os arquivos recebidos são, ou não, paired-end
-    :type paried_end: bool
+    :param paired_end: argumento que mostra se os arquivos recebidos são, ou não, paired-end
+    :type paired_end: bool
     :param threads: número de threads a serem utilizadas pelo fastp.
     :type threads: int
     """
@@ -22,6 +22,8 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
     path_data_input = Path(data_path) / "raw"
     path_data_output = Path(data_path) / "processed"
     path_output = Path(results_path) / "02_fastp_report"
+
+    sucesso_ids = []
 
     threads = str(threads)
 
@@ -31,7 +33,7 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
 
         log_path = Path("logs") / f"{i}_fastp.log"
 
-        R1_name = (i + "_1" if paried_end else i)
+        R1_name = (i + "_1" if paired_end else i)
         extension = ".fastq"
         extension_output = ".fq.gz"
 
@@ -42,7 +44,7 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
         html_out = path_output / (i + ".html")
         json_out = path_output / (i + ".json")
 
-        if paried_end == True:
+        if paired_end:
             R2_name = i + "_2"
 
             R2_path_input = path_data_input / (R2_name + extension)
@@ -61,16 +63,17 @@ def trimm_files(data_path:str, results_path:str, sra_ids:list, paried_end:bool, 
                             "-h", html_out,
                             "-j", json_out]
 
-        logger.info(f"Comando: {" ".join(map(str, command_fastp))}")
+        logger.info(f"Comando: {' '.join(map(str, command_fastp))}")
 
         with open(log_path, "w") as log_file:
             fastp = subprocess.run(command_fastp, stdout=log_file, stderr=log_file, text=True)
 
         if fastp.returncode != 0:
-                print(f"ERRO no ID {i}:")
-                logger.error(f"ERRO no ID {i}")
-                logger.error(fastp.stderr)
-                print(fastp.stderr)
+                print(f"Fastp falhou para {i}. Verifique: {log_path}")
+                logger.error(f"Fastp falhou para {i}. Verifique: {log_path}")
         else:
                 print(f'Fastp concluído para o ID {i}')
                 logger.info(f"Fastp: Concluido com sucesso ID {i}")
+                sucesso_ids.append(i)
+
+    return sucesso_ids
