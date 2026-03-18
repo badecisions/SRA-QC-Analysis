@@ -6,5 +6,5 @@ def realocate_logfile():
 
     path_log = Path("logs")
 
-    for i in Path(".").glob(f"*.log"):
-        shutil.move(i.absolute(), path_log)
+    for log_file in Path(".").glob(f"*.log"):
+        shutil.move(log_file.absolute(), path_log)
