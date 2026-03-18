@@ -1,8 +1,14 @@
-from typing import List, Optional
 from pathlib import Path
+import logging, sys
 
-def id_or_file(sra_lista: Optional[List[str]] = None, sra_file: Optional[str] = None) -> list:
+logger = logging.getLogger(__name__)
+
+def id_or_file(sra_lista: list[str]| None = None, sra_file: str | None = None) -> list:
     """Lida com o input, seja ele IDs digitados no terminal ou arquivo .txt"""
+
+    if not sra_lista and not sra_file:
+        logger.error("ERRO: Forneça IDs via --sra ou --file.")
+        sys.exit("ERRO: Forneça IDs via --sra ou --file.")
 
     lista_sra = []
 
@@ -20,9 +26,11 @@ def id_or_file(sra_lista: Optional[List[str]] = None, sra_file: Optional[str] = 
 
             except Exception as erro:
                 print(f"Erro ao ler o arquivo: {erro}")
+        elif not path_arquivo.exists():
+            logger.error(f"ERRO: Arquivo não encontrado: {path_arquivo}")
+            sys.exit(f"ERRO: Arquivo não encontrado: {path_arquivo}")
 
-
-    lista_sra = list(set(lista_sra))
+    lista_sra = list(dict.fromkeys(lista_sra))
 
     print(f"\nTotal de IDs para processar: {len(lista_sra)}")
 
