@@ -33,10 +33,10 @@ def create_directories(output_folder:str, data_folder:str):
                    results_clean, results_multi, logs, 
                    data_base, data_raw, data_processed]
 
-    for dir in directories:
+    for directory in directories:
         try:
-            dir.mkdir(exist_ok=True)
-            logger.info(f'Criando {dir}')
+            logger.info(f'Criando {directory}')
+            directory.mkdir(exist_ok=True)
         except Exception as e:
                 logger.error(f"Um erro impediu a execução: {e}")
 

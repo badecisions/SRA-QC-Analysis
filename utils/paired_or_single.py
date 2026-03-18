@@ -1,9 +1,9 @@
 from pathlib import Path
-import logging
+import logging, sys
 
 logger = logging.getLogger(__name__)
 
-def check_layout_file(download_path:str, sra_ids:list) -> list:
+def check_layout_file(download_path:str, sra_ids:list) -> tuple[list, list]:
     """Verifica quais arquivos são PAIRED-END e quais são SINGLE-END."""
 
     paired_ids = []
@@ -18,10 +18,16 @@ def check_layout_file(download_path:str, sra_ids:list) -> list:
 
         if caminho_file.exists():
             paired_ids.append(i)
+            logger.info(f"{i}: PAIRED-END")
         else:
             single_ids.append(i)
+            logger.info(f"{i}: SINGLE-END")
 
-    logger.info(f"Paired-end: {" ".join(i for i in paired_ids)}")
-    logger.info(f"Single-end: {" ".join(i for i in single_ids)}")
+    if not paired_ids and not single_ids:
+        logger.error("Nenhum arquivo classificado — lista de IDs vazia.")
+        sys.exit("Nenhum ID para classificar.")
+
+    logger.info(f"Paired-end: {' '.join(i for i in paired_ids)}")
+    logger.info(f"Single-end: {' '.join(i for i in single_ids)}")
     
     return paired_ids, single_ids

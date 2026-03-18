@@ -20,23 +20,27 @@ def quality_control(data_path:str, results_path:str, threads:int, raw:bool, sra_
         padrao = f"{i}*" + (".fastq" if raw else ".fq.gz")
         arquivos_encontrados = list(path_data.glob(padrao))
 
-        log_path = Path("logs") / f"{i}_fastqc.log"
+        if not arquivos_encontrados:
+            logger.warning(f"FastQC: Nenhum arquivo encontrado para {i} com padrão '{padrao}'")
+            continue
+
+        suffix = "raw" if raw else "clean"
+        log_path = Path("logs") / f"{i}_fastqc_{suffix}.log"
 
         command_fastqc = ["fastqc", "--outdir", path_output, "--threads", threads]
 
-        for arq in arquivos_encontrados:
-            command_fastqc.append(str(arq))
+        arquivos_str = [str(arq) for arq in arquivos_encontrados]
 
-            with open(log_path, "w") as log_file:
-                fastqc = subprocess.run(command_fastqc, stdout=log_file, stderr=log_file, text=True)
+        run_cmd = command_fastqc + arquivos_str
 
-            logger.info(f"Command: {' '.join(map(str, command_fastqc))}")
+        logger.info(f"Command: {' '.join(map(str, run_cmd))}")
 
-            if fastqc.returncode != 0:
-                print(f"ERRO no ID {i}:")
-                logger.error(f"ERRO ID {i}:")
-                logger.error(fastqc.stderr)
-                print(fastqc.stderr)
-            else:
-                print(f'FastQC: concluído para o ID {i}')
-                logger.info(f"FastQC: Concluido com sucessso ID {i}")
+        with open(log_path, "w") as log_file:
+            fastqc = subprocess.run(run_cmd, stdout=log_file, stderr=log_file, text=True)
+
+        if fastqc.returncode != 0:
+            print(f"ERRO no ID {i}:")
+            logger.error(f"FastQC falhou para {i}. Verifique: {log_path}")
+        else:
+            print(f'FastQC: concluído para o ID {i}')
+            logger.info(f"FastQC: Concluído com sucessso ID {i}")

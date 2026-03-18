@@ -4,34 +4,39 @@ logger = logging.getLogger(__name__)
 
 # function to verify conda
 def conda_verify():
-    """Verifica a instação do conda e também a presença das ferramentas da pipeline no ambiente"""
+    """Verifica a instalação do conda e também a presença das ferramentas da pipeline no ambiente"""
     print("\nVERIFICANDO O CONDA")
 
     command_conda = ["conda", "--version"]
-    command_tools = ["fastqc", "--version", "&&", 
-                     "fastp", "--version", "&&", 
-                     "multiqc", "--version", "&&", 
-                     "fasterq-dump", "--version"]
+    tools = ["fastqc", "fastp", "multiqc", "fasterq-dump"]
     
     resp_conda = subprocess.run(command_conda, capture_output=True, text=True)
 
     if resp_conda.returncode == 0:
         print("CONDA: Instalação encontrada!")
         logger.info("CONDA: Instalação encontrada!")
-        logger.info(resp_conda.stdout)
+        logger.info(resp_conda.stdout.strip())
     else:
         logger.error(f'CONDA: Instalação não encontrada: {resp_conda.stderr}')
         sys.exit("ERRO: Conda não instalado")
 
-    try:     
-        resp_tools = subprocess.run(command_tools, capture_output=True, text=True)
-        if resp_tools.returncode == 0:
-            print("CONDA: Ambiente ativo e Ferramentas encontradas!")
-            logger.info(f"CONDA: Ambiente ativo e Ferramentas encontradas")
-            logger.info(f'Versão das ferramentas: {resp_tools.stdout}')
+    try:
+        for tool in tools:
+
+            resp_tool = subprocess.run([tool, "--version"], capture_output=True, text=True)
+
+            if resp_tool.returncode != 0:
+                print(f"CONDA: {tool} não encontrado no ambiente.")
+                logger.error(f"CONDA: {tool} não encontrado no ambiente.")
+                sys.exit(f"ERRO: {tool} não encontrado no ambiente.")
+            else:
+                print(f"CONDA: {tool} encontrado.")
+                logger.info(f"CONDA: {tool} encontrado.")
+                logger.info(f'Versão {tool}: {resp_tool.stdout.strip()}')
+
     except FileNotFoundError:
-        print("\nERRO: Nenhuma ferramenta encontrada.")
-        logger.error("Nenhuma ferramenta encontrada.")
+        print("\nERRO: Ferramenta não encontrada.")
+        logger.error("Ferramenta não encontrada.")
         logger.info("Ative o ambiente sra_qc.")
         sys.exit("CONDA: Ative o ambiente sra_qc -> conda activate sra_qc")
         

@@ -9,7 +9,9 @@ def save_environment_info():
     path_log = Path("logs/environment_snapshot.log")
     
     with open(path_log, "w") as f:
-        subprocess.run(["conda", "list"], stdout=f)
+        result = subprocess.run(["conda", "list"], stdout=f, text=True)
     
-    logger.info(f"Versões de ambiente salvas em {path_log.absolute()}")
-
+    if result.returncode != 0:
+        logger.warning("Não foi possível salvar o snapshot do ambiente.")
+    else:
+        logger.info(f"Versões de ambiente salvas em {path_log.absolute()}")
