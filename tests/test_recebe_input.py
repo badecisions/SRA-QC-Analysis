@@ -29,7 +29,7 @@ def test_lista_e_arquivo(tmp_path):
     file.write_text("SRR2131921\nSRR21391312\n")
 
     result = id_or_file(sra_file=file, sra_lista=["SRR894891821"])
-    assert sorted(result) == sorted(["SRR38912321", "ERR21931832"]), "Erro: Não conseguiu processar dois inputs (CLI e File)."
+    assert sorted(result) == sorted(["SRR2131921", "SRR21391312", "SRR894891821"]), "Erro: Não conseguiu processar dois inputs (CLI e File)."
 
 def test_deduplicacao(tmp_path):
     # coloca o mesmo ID na lista e no arquivo
