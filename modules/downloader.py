@@ -23,6 +23,8 @@ def _run_command(command:list, id_name:str|Path, tool_name):
     
     log_path = Path("logs") / f"{corrigido_id}_{tool_name}.log"
 
+    if not Path("logs").exists():
+        Path("logs").mkdir()
 
     with open(log_path, "w") as log_file:
             try:
