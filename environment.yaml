@@ -17,10 +17,12 @@ dependencies:
   - certifi=2026.1.4=pyhd8ed1ab_0
   - charset-normalizer=3.4.4=pyhd8ed1ab_0
   - click=8.3.1=pyh8f84b5b_1
+  - colorama=0.4.6=pyhd8ed1ab_1
   - coloredlogs=15.0.1=pyhd8ed1ab_4
   - colormath=3.0.0=pyhd8ed1ab_4
   - cpython=3.12.12=py312hd8ed1ab_2
   - curl=8.18.0=hcf29cc6_1
+  - exceptiongroup=1.3.1=pyhd8ed1ab_0
   - expat=2.7.3=hecca717_0
   - fastp=1.1.0=heae3180_0
   - fastqc=0.12.1=hdfd78af_0
@@ -43,6 +45,7 @@ dependencies:
   - icu=78.2=h33c6efd_0
   - idna=3.11=pyhd8ed1ab_0
   - importlib-metadata=8.7.0=pyhe01879c_1
+  - iniconfig=2.3.0=pyhd8ed1ab_0
   - isa-l=2.31.1=hb9d3cd8_1
   - jinja2=3.1.6=pyhcf101f3_1
   - jsonschema=4.26.0=pyhcf101f3_0
@@ -146,6 +149,7 @@ dependencies:
   - pip=26.0.1=pyh8b19718_0
   - pixman=0.46.4=h54a6638_1
   - plotly=6.5.2=pyhd8ed1ab_0
+  - pluggy=1.6.0=pyhf9edf01_1
   - polars=1.38.1=pyh6a1acc5_0
   - polars-lts-cpu=1.34.0.deprecated=hc364b38_0
   - polars-runtime-32=1.38.1=py310hffdcd12_0
@@ -156,6 +160,7 @@ dependencies:
   - pydantic-core=2.41.5=py312h868fb18_1
   - pygments=2.19.2=pyhd8ed1ab_0
   - pysocks=1.7.1=pyha55dd90_7
+  - pytest=9.0.2=pyhcf101f3_0
   - python=3.12.12=hd63d673_2_cpython
   - python-dotenv=1.2.1=pyhcf101f3_0
   - python-gil=3.12.12=hd8ed1ab_2
@@ -175,6 +180,7 @@ dependencies:
   - sra-tools=3.2.1=h4304569_1
   - tiktoken=0.12.0=py312hd04cf1f_3
   - tk=8.6.13=noxft_h366c992_103
+  - tomli=2.4.0=pyhcf101f3_0
   - tqdm=4.67.3=pyh8f84b5b_0
   - typeguard=4.4.4=pyhd8ed1ab_0
   - typing-extensions=4.15.0=h396c80c_0
@@ -198,3 +204,4 @@ dependencies:
   - yaml=0.2.5=h280c20c_3
   - zipp=3.23.0=pyhcf101f3_1
   - zstd=1.5.7=hb78ec9c_6
+
