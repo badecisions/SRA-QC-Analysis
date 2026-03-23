@@ -10,7 +10,7 @@ def run_multiqc(result_path:str):
     
     command_multiqc = ["multiqc", result_path, "-o", output_dir]
     
-    logger.info(f"MultiQC: Commando {' '.join(map(str, command_multiqc))}")
+    logger.info(f"MultiQC: Comando {' '.join(map(str, command_multiqc))}")
 
     multiqc = subprocess.run(command_multiqc, capture_output=True, text=True)
 
