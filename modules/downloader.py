@@ -10,7 +10,7 @@ def _run_command(command:list, id_name:str|Path, tool_name):
 
     run_cmd = command + [str(id_name)]
 
-    logger.info(f"{tool_name}: Baixando o ID {id_name}")
+    logger.info(f"{tool_name}: Processando o ID {id_name}")
     logger.info(f"Comando utilizado: {' '.join(map(str, run_cmd))}")
 
 
